@@ -1,11 +1,19 @@
 import json
-import urllib.parse
 import random
 import string
 import re
 
 import scrapy
-from scrapy.http.request import Request
+
+try:
+    # Python 3
+    from urllib.parse import urlparse, parse_qs
+except ImportError:
+    # Python 2
+    from urlparse import urlparse, parse_qs
+
+
+#from scrapy.http.request import Request
 
 class QuestionSpider(scrapy.Spider):
     name = "questions"
@@ -43,20 +51,20 @@ class QuestionSpider(scrapy.Spider):
         
     def parse(self, response):
         url =  response.request.url
-        parsed = urllib.parse.urlparse(url)
+        parsed = urlparse(url)
         curr_section = -1
 
         has_section = len(response.css('.more-section a::attr(href)').extract()) + 1
         
         try:
-            val = urllib.parse.parse_qs(parsed.query)['page'][0]
+            val = parse_qs(parsed.query)['page'][0]
             curr_page = int(val)
         except:
             curr_page = 1
 
         if (has_section>1):
             try:
-                val = urllib.parse.parse_qs(parsed.query)['section'][0]
+                val = parse_qs(parsed.query)['section'][0]
                 curr_section = int(val)
             except:
                 curr_section = 1

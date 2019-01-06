@@ -1,0 +1,14 @@
+README.md
+setup.py
+data_grab/__init__.py
+data_grab/items.py
+data_grab/middlewares.py
+data_grab/pipelines.py
+data_grab/settings.py
+data_grab/spiders/__init__.py
+data_grab/spiders/question_spider.py
+project.egg-info/PKG-INFO
+project.egg-info/SOURCES.txt
+project.egg-info/dependency_links.txt
+project.egg-info/entry_points.txt
+project.egg-info/top_level.txt

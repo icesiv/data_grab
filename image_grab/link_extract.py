@@ -45,7 +45,8 @@ with open('out/out.csv') as csv_file:
     with open('out/image_list.csv', mode='w') as imageList_file:
         csv_writer = csv.writer(imageList_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-        csv_writer.writerow(['meta','type','url'])
+        csv_writer.writerow(['meta','type',
+        'url'])
 
         for target_list in image_list:
             csv_writer.writerow([target_list['meta'], target_list['type'], target_list['url']])

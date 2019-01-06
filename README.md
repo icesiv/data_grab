@@ -1,8 +1,5 @@
-## Prepare icons for export
+## Todo
 
-1. next page 
-2. section 
-3. complete csv
-4. topic json 
-5. topic picker 
+1. All topic
+2. image grabber
 
