@@ -2,7 +2,7 @@ import json
 import random
 import string
 import re
-
+import pkgutil
 import scrapy
 
 try:
@@ -11,9 +11,6 @@ try:
 except ImportError:
     # Python 2
     from urlparse import urlparse, parse_qs
-
-
-#from scrapy.http.request import Request
 
 class QuestionSpider(scrapy.Spider):
     name = "questions"
@@ -27,7 +24,18 @@ class QuestionSpider(scrapy.Spider):
     start_urls = []
 
     def __init__(self, topic='<NA>', **kwargs):
-        jdata = json.loads(open ('db/topic.json').read())
+        '''
+        jsondata = pkgutil.get_data("project", "resources/topic.json")
+
+        print(type(jsondata))
+        print("<DATA>")
+        print(jsondata)
+
+        return
+
+        jdata = json.loads(jsondata)
+        '''
+        jdata = json.loads(open ('data_grab/resources/topic.json').read())
 
         topic_name = ""
         set_url = ""
