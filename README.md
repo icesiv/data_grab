@@ -1,5 +1,4 @@
 ## Todo
 
-1. All topic
-2. image grabber
+scrapy crawl questions -o ./output/out.csv -a topic="Clock"
 

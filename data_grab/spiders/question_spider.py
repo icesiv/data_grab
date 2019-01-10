@@ -84,33 +84,17 @@ class QuestionSpider(scrapy.Spider):
                 continue
             else:
                 ques =  re.sub(r" class=\"question-main\"", "", ques)
-                ques_no = ques_set.css('.question-number::text').extract_first()
-
+                
                 # Answer Manager
                 ans = ques_set.css('input+ label').extract()
-                ans_json = '['
 
-                total_answers = len(ans)
-
-                i_ans = 1
-
-                for a in ans:
+                # cleanup
+                for i,a in enumerate(ans):
                     a = re.sub(r"</label>", "", a)
                     a = re.sub(r"<label.*?>", "", a)
+                    ans[i] = a
 
-                    ans[i_ans-1] = a
-
-                    ans_json += '{\"option_value\": \"'
-                    ans_json += a
-                    ans_json += '\", \"optionl2_value\": \"\", \"has_file\": 0, \"file_name\": \"\"}'
-
-                    if i_ans < total_answers:
-                        ans_json += ","
-
-                    i_ans += 1
-    
-                ans_json += ']'
-            
+                # correct answer 
                 corr_ans_index = ques_set.css('.question-options input::attr(value)').extract()
                 corr_ans = []
             
@@ -118,9 +102,31 @@ class QuestionSpider(scrapy.Spider):
                     i = int(index) - 1 
                     corr_ans.append(ans[i])
 
-                ###########################
+                # shuffle ans
+                random.shuffle(ans)
 
-                # Meta and Slug  Manager
+                for i_c, v_c in enumerate(corr_ans):
+                    for i_a , v_a in enumerate(ans):
+                        if(v_c == v_a):
+                            corr_ans_index[i_c] = i_a + 1  
+
+                
+                total_answers = len(ans)
+                ans_json = '['
+
+                for i,a in enumerate(ans):
+                    ans_json += '{\"option_value\": \"'
+                    ans_json += a
+                    ans_json += '\", \"optionl2_value\": \"\", \"has_file\": 0, \"file_name\": \"\"}'
+
+                    if i < total_answers - 1:
+                        ans_json += ","
+
+                ans_json += ']'
+
+                # Meta 
+                ''' 
+                ques_no = ques_set.css('.question-number::text').extract_first()
                 meta_format = '{{topic_id:{topic_id}|topic:{topic}|section:{section}|page:{page}|question:{question}}}'
 
                 meta = meta_format.format(
@@ -130,9 +136,12 @@ class QuestionSpider(scrapy.Spider):
                     page = curr_page,
                     question= ques_no
                 )
+                '''
 
+                # Slug  Manager
                 slug = str(self.subject_id)+ id_generator() + str(self.topic_id)
 
+                # explanation Cleanup
                 explanation = ques_set.css('.page-title~ div+ div').extract_first()
                 explanation = explanation.replace('<span class=\"color\">Solution: </span>',"")
                 explanation = explanation.replace("<div>","")
@@ -142,7 +151,7 @@ class QuestionSpider(scrapy.Spider):
                 ###########################
 
                 item = {
-                    'meta': meta,
+                    'id': '',
                     'subject_id': self.subject_id,
                     'topics_id': self.topic_id,
                     'question_tags': self.topic_name,
@@ -160,23 +169,24 @@ class QuestionSpider(scrapy.Spider):
                     'difficulty_level': "easy",
                     'hint': "",
                     'explanation': explanation,
-                    'explanation_file': "NULL",
+                    'explanation_file': "",
                     'status': 1,
                     'created_at': "",
                     'updated_at': "",
                     'question_l2': ques,
-                    'explanation_l2': explanation,
-                    'correct_answers_value': corr_ans
+                    'explanation_l2': explanation
                 }
                 
                 '''
                 item = {
                     'meta': meta,
+                    'correct_answers_value': corr_ans
                 }
                 '''
              
                 yield item
 
+        
         # follow pagination
         has_next_page = response.css('.icon-angle-right').extract_first()
         next_page = None
