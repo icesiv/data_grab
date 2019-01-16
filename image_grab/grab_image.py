@@ -13,11 +13,11 @@ with open(CSV_IMAGE_LIST_LINK) as csvFile:
     total_image = sum(1 for row in reader)
 
 total_image -= 1 # remove header
+image_count = 1
 
 with open (CSV_IMAGE_LIST_LINK) as csvFile:
     reader = csv.DictReader(csvFile)
-
-    image_count = 1
+    
     for row in reader:
         filename = '.' + row[IMAGE_URL_ROW] 
         url = BASE_URL + row[IMAGE_URL_ROW]
@@ -31,7 +31,6 @@ with open (CSV_IMAGE_LIST_LINK) as csvFile:
         try:
             if os.path.exists(filename):
                 print(str(image_count) + "/" + str(total_image) + " - duplicate")
-                continue
             else:
                 print(str(image_count) + "/" + str(total_image))
                 fName, head = urlretrieve(url, filename)
