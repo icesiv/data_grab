@@ -50,9 +50,9 @@ class QuestionSpider(scrapy.Spider):
                 break
                 
         if topic_name == "":
-            print ("Not Found " + topic )
+            print ("<<Error>> [ Topic Not Found ] - " + topic )
         else:
-            print ("Found " + topic )
+            print ("Topic Found - Please Wait")
             self.topic_name = topic_name
             self.start_urls = [set_url]
             super().__init__(**kwargs)
@@ -61,6 +61,8 @@ class QuestionSpider(scrapy.Spider):
         url =  response.request.url
         parsed = urlparse(url)
         curr_section = -1
+     
+        print ("Page captured -",url)
 
         has_section = len(response.css('.more-section a::attr(href)').extract()) + 1
         
@@ -125,7 +127,6 @@ class QuestionSpider(scrapy.Spider):
                 ans_json += ']'
 
                 # Meta 
-                ''' 
                 ques_no = ques_set.css('.question-number::text').extract_first()
                 meta_format = '{{topic_id:{topic_id}|topic:{topic}|section:{section}|page:{page}|question:{question}}}'
 
@@ -136,17 +137,20 @@ class QuestionSpider(scrapy.Spider):
                     page = curr_page,
                     question= ques_no
                 )
-                '''
-
+            
                 # Slug  Manager
                 slug = str(self.subject_id)+ id_generator() + str(self.topic_id)
 
                 # explanation Cleanup
                 explanation = ques_set.css('.page-title~ div+ div').extract_first()
-                explanation = explanation.replace('<span class=\"color\">Solution: </span>',"")
-                explanation = explanation.replace("<div>","")
-                explanation = explanation.replace("</div>","")
-                explanation = explanation.strip()
+                
+                if EXPLANATION_NOT_FOUND_TEXT in explanation: 
+                    explanation = EXPLANATION_NOT_FOUND_REPLACETEXT(slug)
+                else:
+                    explanation = explanation.replace('<span class=\"color\">Solution: </span>',"")
+                    explanation = explanation.replace("<div>","")
+                    explanation = explanation.replace("</div>","")
+                    explanation = explanation.strip()
 
                 ###########################
 
@@ -174,19 +178,14 @@ class QuestionSpider(scrapy.Spider):
                     'created_at': "",
                     'updated_at': "",
                     'question_l2': ques,
-                    'explanation_l2': explanation
-                }
-                
-                '''
-                item = {
+                    'explanation_l2': explanation,
                     'meta': meta,
                     'correct_answers_value': corr_ans
                 }
-                '''
+                print("Processing Question :" ,ques_no, meta)
              
                 yield item
 
-        
         # follow pagination
         has_next_page = response.css('.icon-angle-right').extract_first()
         next_page = None
@@ -215,3 +214,8 @@ class QuestionSpider(scrapy.Spider):
 
 def id_generator(size=10, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
+
+def EXPLANATION_NOT_FOUND_REPLACETEXT(s):
+    return '''Explanation not Available for this Question. Thousand's of Student and Creative Talents are Looking to Discuss this. <a class="discuss-link" href="/portal/''' + s + '''"> Discuss on it</a>" '''
+
+EXPLANATION_NOT_FOUND_TEXT = "No explanation is given for this question "

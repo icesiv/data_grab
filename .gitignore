@@ -23,5 +23,7 @@ build/
 # Backup files
 *~.nib
 
-# Images
+# Custome
 images/
+output/
+*~.pyc
