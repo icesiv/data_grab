@@ -1,3 +1,10 @@
+## Dependancy 
+
+    pip install Scrapy
+    pip install python-resize-image
+
+
+
 
 ## Get Data
 python main.py "Clock"

@@ -9,17 +9,14 @@ CSV_IMAGE_LIST_LINK = "image_grab/_list.csv"
 image_list = []
 
 def extract_image(text_with_link):
-    jpgs = re.findall(r"\/images\/.*?JPG", text_with_link, re.MULTILINE)
-    pngs = re.findall(r"\/images\/.*?PNG", text_with_link, re.MULTILINE)
+    jpgs = re.findall(r"\/public\/.*?JPG", text_with_link, re.MULTILINE)
+    pngs = re.findall(r"\/public\/.*?PNG", text_with_link, re.MULTILINE)
     images = jpgs + pngs
     return(images)
 
 def extract_from_file(file_link):
     with open(file_link) as csv_file:
         csv_reader = csv.DictReader(csv_file)
-
-        # 6	    question
-        # 17	explanation
 
         want_cl = ["question", "explanation"]
 

@@ -26,4 +26,5 @@ build/
 # Custome
 images/
 output/
+public/
 *~.pyc
