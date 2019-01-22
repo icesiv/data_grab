@@ -1,5 +1,5 @@
-IMAGE_LINK_OLD = "/images/solution-image/"
-IMAGE_LINK_NEW = "/public/uploads/questions/"
+IMAGE_LINK_OLD = "/images/"
+IMAGE_LINK_NEW = "/public/uploads/set01/"
 
 EXPLANATION_NOT_FOUND_TEXT = "No explanation is given for this question "
 

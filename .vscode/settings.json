@@ -1,4 +1,5 @@
 {
-    "python.pythonPath": "/Users/Himel/.local/share/virtualenvs/data_grab-5XN0-uhI/bin/python",
-    "python.linting.pylintEnabled": false
+    "python.pythonPath": "/usr/local/opt/python/bin/python3.7",
+    "python.linting.pylintEnabled": false,
+    "python.formatting.provider": "autopep8"
 }

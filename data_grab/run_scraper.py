@@ -11,8 +11,8 @@ class Scraper:
         self.process = CrawlerProcess(get_project_settings())
         self.spiders = QuestionSpider # The spider you want to crawl
 
-    def run_spiders(self, topic, next_page=True):
-        filename = 'output/' + topic + '.csv'
+    def run_spiders(self, data_obj, next_page=True):
+        filename = 'output/' + data_obj["topic_name"] + '.csv'
 
         self.process = CrawlerProcess({
             'FEED_URI': filename,
@@ -28,5 +28,5 @@ class Scraper:
         except:
             print("Error On File Check")
 
-        self.process.crawl(self.spiders, topic=topic, go_next_page=next_page)
+        self.process.crawl(self.spiders, data_obj, go_next_page=next_page)
         self.process.start()  # the script will block here until the crawling is finished

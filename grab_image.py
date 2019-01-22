@@ -10,10 +10,12 @@ import PIL
 from PIL import Image
 
 CSV_DATA_FOLDER = "output"
-CSV_IMAGE_LIST_LINK = "image_grab/_list.csv"
 COLUMNS_WITH_IMAGES = ["image_list"]
 
 BASE_URL = "https://www.examveda.com"
+
+image_count = 0
+duplicate_count = 0
 
 def resize_image(image_file_path):
     img = Image.open(image_file_path)
@@ -26,6 +28,9 @@ def resize_image(image_file_path):
 def download_image(image_obj):
     if not image_obj:
         return
+
+    global image_count
+    global duplicate_count
 
     image_obj = image_obj.split(":")
 
@@ -40,7 +45,7 @@ def download_image(image_obj):
 
     try:
         if os.path.exists(filename):
-            print("duplicate")
+            duplicate_count += 1
         else:
             fName, head = urlretrieve(url, filename)
 
@@ -49,30 +54,20 @@ def download_image(image_obj):
                 os.remove(filename)
             else:
                 resize_image(filename)
-                return 1
-
+                image_count += 1
     except:
         print("Error-- ", sys.exc_info()[0])
 
-    return 0
-
-
 def extract_image(s):
     if(not s):
-        return 0
+        return
 
     s = s.split("|")
     
-    i = 0
     for c in s:
         download_image(c)
-        i+=1
-
-    return i
 
 def extract_from_file(file_link):
-    image_count = 0
-
     print("Processing File:",file_link)
 
     with open(file_link) as csv_file:
@@ -80,15 +75,10 @@ def extract_from_file(file_link):
 
         for row in csv_reader:
             for val in COLUMNS_WITH_IMAGES:
-                try:
-                    count = extract_image(row[val])
-                except:
-                    print("Error <Missing Column> : " , val)
-                    continue
+                extract_image(row[val])
 
-                image_count += count 
-
-    print("Total Image found", image_count)
+    print("Duplicate count", duplicate_count)
+    print("New Image found", image_count)
 
 # >> Start >>>>>>>>>>>>>>>>>>>>
 

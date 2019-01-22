@@ -1,12 +1,7 @@
-#import pkgutil
-import csv
-import json
 import ntpath
 import random
 import re
 import string
-from os import listdir
-from os.path import isfile, join
 
 import config
 import scrapy
@@ -20,7 +15,6 @@ except ImportError:
 
 #################################################################
 
-
 class QuestionSpider(scrapy.Spider):
     name = "questions"
     allowed_domains = ["examveda.com"]
@@ -32,31 +26,21 @@ class QuestionSpider(scrapy.Spider):
 
     start_urls = []
 
-    def __init__(self, topic='<NA>', go_next_page=True, **kwargs):
-        j_data = json.loads(open('data_grab/resources/topic.json').read())
-
-        topic_name = ""
-        set_url = ""
-
+    def __init__(self, data_obj, go_next_page=True, **kwargs):
+    
         self.go_next_page = go_next_page
+    
+        topic_name = data_obj["topic_name"]
+        set_url = data_obj["topic_url"]
 
-        for c in j_data:
-            if topic == c["topic_name"]:
-                topic_name = topic
-                self.main_id = c["main_id"]
-                self.topic_id = c["topic_id"]
-                self.subject_id = c["subject_id"]
-                set_url = c["topic_url"]
-                break
+        self.main_id = data_obj["main_id"]
+        self.topic_id = data_obj["topic_id"]
+        self.subject_id = data_obj["subject_id"]
+    
+        self.topic_name = topic_name
+        self.start_urls = [set_url]
+        super().__init__(**kwargs)
 
-        if topic_name == "":
-            print("<<Error>> [ Topic Not Found ] - " + topic)
-        else:
-            print("Topic Found - Please Wait")
-            print("Target Page -", set_url)
-            self.topic_name = topic_name
-            self.start_urls = [set_url]
-            super().__init__(**kwargs)
 
     def parse(self, response):
         url = response.request.url
@@ -165,13 +149,15 @@ class QuestionSpider(scrapy.Spider):
 
                 image_list = ""
 
-                from_explanation = extract_link_from_text(explanation , "exp-" + slug)
+                web_safe_topic =  self.topic_name.lower()
+                web_safe_topic = web_safe_topic.replace(" ", "-")
+
+                from_explanation = extract_link_from_text (explanation , web_safe_topic , "explanation/" + slug)
+                from_ques = extract_link_from_text (ques , web_safe_topic , "question/" + slug)
                 
                 if len(from_explanation[1]) > 0:
                     explanation = from_explanation[0]
                     image_list = from_explanation[1]
-
-                from_ques = extract_link_from_text(ques , "ques-" + slug)
                 
                 if len(from_ques[1]) > 0:
                     ques = from_ques[0]
@@ -256,20 +242,29 @@ def id_generator(size=10, chars=string.ascii_uppercase + string.digits):
 # Changes Name in main
 
 
-def extract_link_from_text(text_with_image, new_name):
+def extract_link_from_text(text_with_image, web_safe_topic, new_name):
     image_string = ""
     images = re.findall(r"\/images\/.*?JPG", text_with_image, re.MULTILINE)
+    images += re.findall(r"\/images\/.*?jpg", text_with_image, re.MULTILINE)
+    images += re.findall(r"\/images\/.*?PNG", text_with_image, re.MULTILINE)
+    images += re.findall(r"\/images\/.*?png", text_with_image, re.MULTILINE)
 
     img_count = 0
 
+    web_safe_topic = web_safe_topic + "/"
+
     for j in images:
         img_count += 1
-        new_dir_name = ntpath.dirname(j).replace(
-            config.IMAGE_LINK_OLD, config.IMAGE_LINK_NEW)
-        new_file_name = "{0}-{1}.png".format(new_name, img_count)
-        new_file = new_dir_name + "/" + new_file_name
 
-        text_with_image = text_with_image.replace(j, new_file)
-        image_string = image_string + j + ":" + new_file + "|"
+        new_dir_name = ntpath.dirname(j) + "/"
+        new_dir_name = new_dir_name.replace("solution-image/", "")
+        new_dir_name = new_dir_name.replace(web_safe_topic, "")
+        new_dir_name = new_dir_name.replace(config.IMAGE_LINK_OLD, config.IMAGE_LINK_NEW)
+    
+        new_file_name = "{0}-{1}.png".format(web_safe_topic + new_name, img_count)
+        new_file_path = new_dir_name + new_file_name
+    
+        text_with_image = text_with_image.replace(j, new_file_path)
+        image_string = image_string + j + ":" + new_file_path + "|"
 
     return (text_with_image, image_string)
