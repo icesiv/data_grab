@@ -15,9 +15,9 @@ except ImportError:
 
 #################################################################
 
-class QuestionSpider(scrapy.Spider):
-    name = "questions"
-    allowed_domains = ["examveda.com"]
+class StudyPressSpider(scrapy.Spider):
+    name = "studypress"
+    allowed_domains = ["icabd.com"]
 
     main_id = 0
     topic_id = 0
@@ -44,27 +44,13 @@ class QuestionSpider(scrapy.Spider):
 
     def parse(self, response):
         url = response.request.url
-        parsed = urlparse(url)
-        curr_section = -1
 
-        has_section = len(response.css(
-            '.more-section a::attr(href)').extract()) + 1
+        for ques_set in response.css('.list-ques'):
+            print(">> " , ques_set)    
 
-        try:
-            val = parse_qs(parsed.query)['page'][0]
-            curr_page = int(val)
-        except:
-            curr_page = 1
 
-        if (has_section > 1):
-            try:
-                val = parse_qs(parsed.query)['section'][0]
-                curr_section = int(val)
-            except:
-                curr_section = 1
-
-        for ques_set in response.css('.question-type-normal'):
-            ques = ques_set.css('.question-main').extract_first()
+            ques = ques_set.css('.list-group-item list-ques').extract_first()
+            
 
             if not ques:
                 continue

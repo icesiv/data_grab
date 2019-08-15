@@ -3,13 +3,14 @@
 
 > pip install python-resize-image
 
-## Get Data
-> python main.py "Clock"
+## Get Data Examvida
+> python grab_examvida.py "Clock"
+
+## Get Data Study Press
+> python grab_studypress.py "Clock"
 
 ## Get Image 
 > python grab_image.py
-
-
 
 ## New Target
 > http://studypress.org//member/dashboard

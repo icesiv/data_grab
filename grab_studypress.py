@@ -10,7 +10,7 @@ if(len(sys.argv)<2):
 topic = sys.argv[1]
 data_obj = False
 
-j_data = json.loads(open('data_grab/resources/topic.json').read())
+j_data = json.loads(open('data_grab/resources/topic_studypress.json').read())
 
 for c in j_data:
     if topic == c["topic_name"]:
@@ -26,10 +26,12 @@ print("Topic Found - Please Wait")
 
 scraper = Scraper()
 
-if(len(sys.argv)>2):
-    if(sys.argv[2]=="-y"):
-        scraper.run_spiders(data_obj , False)
-    else:
-        scraper.run_spiders(data_obj)
-else:
-    scraper.run_spiders(data_obj)
+scraper.run_spiders(data_obj)
+
+# if(len(sys.argv)>2):
+#     if(sys.argv[2]=="-y"):
+#         scraper.run_spiders(data_obj , False)
+#     else:
+#         scraper.run_spiders(data_obj)
+# else:
+#     scraper.run_spiders(data_obj)
