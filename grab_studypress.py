@@ -4,7 +4,7 @@ import json
 from data_grab.run_scraper import Scraper
 
 if(len(sys.argv)<2):
-    print('Please Give topic name. e.g. "Clock"')
+    print('Please Give topic name. e.g. "ModelTest01"')
     sys.exit()
 
 topic = sys.argv[1]

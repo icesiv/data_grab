@@ -15,13 +15,16 @@ class Scraper:
     def run_spiders(self, data_obj, next_page=True):
         filename = 'output/' + data_obj["topic_name"] + '.csv'
 
-        if data_obj["type"] == "practice":
-            self.spiders = StudyPressSpider
-        elif data_obj["type"] == "modeltest":
-            self.spiders = StudyPressSpider 
-        else:
-            self.spiders = ExamvidaSpider
+        q_type = data_obj.get("type")
 
+        if q_type:
+            if data_obj["type"] == "practice":
+                self.spiders = StudyPressSpider
+            elif data_obj["type"] == "modeltest":
+                self.spiders = StudyPressSpider 
+        else:
+            self.spiders = ExamvidaSpider      
+        
         self.process = CrawlerProcess({
             'FEED_URI': filename,
             'FEED_FORMAT': 'csv',
