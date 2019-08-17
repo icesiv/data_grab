@@ -27,11 +27,3 @@ print("Topic Found - Please Wait")
 scraper = Scraper()
 
 scraper.run_spiders(data_obj)
-
-# if(len(sys.argv)>2):
-#     if(sys.argv[2]=="-y"):
-#         scraper.run_spiders(data_obj , False)
-#     else:
-#         scraper.run_spiders(data_obj)
-# else:
-#     scraper.run_spiders(data_obj)

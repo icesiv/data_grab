@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/usr/local/bin/python3",
+    "python.pythonPath": "C:\\Users\\icesi\\AppData\\Local\\Continuum\\anaconda3\\python.exe",
     "python.linting.pylintEnabled": false,
     "python.formatting.provider": "autopep8"
 }

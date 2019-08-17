@@ -7,7 +7,9 @@
 > python grab_examvida.py "Clock"
 
 ## Get Data Study Press
-> python grab_studypress.py "Clock"
+> python grab_studypress.py "ModelTest01"
+
+> python grab_studypress.py "PhraseIdioms"
 
 ## Get Image 
 > python grab_image.py

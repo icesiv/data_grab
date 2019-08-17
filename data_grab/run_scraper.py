@@ -1,5 +1,9 @@
 from data_grab.spiders.spider_examvida import ExamvidaSpider
-from data_grab.spiders.spider_studypress import StudyPressSpider
+
+from data_grab.spiders.spider_studypress_m import StudyPressMSpider
+from data_grab.spiders.spider_studypress_p import StudyPressPSpider
+
+
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 import os
@@ -19,9 +23,9 @@ class Scraper:
 
         if q_type:
             if data_obj["type"] == "practice":
-                self.spiders = StudyPressSpider
+                self.spiders = StudyPressPSpider
             elif data_obj["type"] == "modeltest":
-                self.spiders = StudyPressSpider 
+                self.spiders = StudyPressMSpider 
         else:
             self.spiders = ExamvidaSpider      
         

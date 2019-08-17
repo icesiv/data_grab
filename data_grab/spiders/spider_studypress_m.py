@@ -4,8 +4,8 @@ import random
 
 from utils import id_generator
 
-class StudyPressSpider(scrapy.Spider):
-    name = "studypress"
+class StudyPressMSpider(scrapy.Spider):
+    name = "studypress_modeltest"
     allowed_domains = ["icabd.com"]
 
     main_id = 0
@@ -35,8 +35,9 @@ class StudyPressSpider(scrapy.Spider):
         edited_body = str(response.body, 'UTF-8')
 
         edited_body = edited_body.replace("<ul class=\'list-group\'>", "<article class='question single-question question-type-normal'><ul>")
-        edited_body = edited_body.replace("<br/>", "</ul></article><article class='question single-question question-type-normal'><ul>")
         edited_body = edited_body.replace("</ul>", "</ul></article>")
+        edited_body = edited_body.replace("<li class=\'list-group-item\'", "</ul></article>\n\r  <article class='question single-question question-type-normal'><ul><li class=\'list-group-item\'")
+
 
         response = response.replace(body=edited_body)
         url = response.request.url
@@ -87,6 +88,9 @@ class StudyPressSpider(scrapy.Spider):
 
             ans_json += ']'
            
+            # Slug  
+            slug = str(self.subject_id) + id_generator() + str(self.topic_id)
+
             # Explanation  
             explanation = ques_set.css('.list-hint').extract_first()
 
@@ -100,9 +104,7 @@ class StudyPressSpider(scrapy.Spider):
                 explanation = explanation.replace("Explanation:", "")
                 explanation = explanation.strip()
 
-            # Slug  
-            slug = str(self.subject_id) + id_generator() + str(self.topic_id)
-
+            # Output Item
             item = {
                 'q_no': ques_no,
                 'subject_id': self.subject_id,
