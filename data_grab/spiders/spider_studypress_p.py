@@ -34,14 +34,20 @@ class StudyPressPSpider(scrapy.Spider):
 
     def parse(self, response):
         edited_body = str(response.body, 'UTF-8')
+        edited_body = edited_body.replace("<p class=\"qmeta\">", "")
 
-        edited_body = edited_body.replace("<p class='qmeta'>", "")
-        edited_body = edited_body.replace("<ul class=\'list-group\'>", "<article class=\'question single-question question-type-normal\'><ul>")
+        edited_body = edited_body.replace("<ul class=\"list-group\">", "<article class=\"question single-question question-type-normal\"><ul>")
         edited_body = edited_body.replace("</ul>", "</ul></article>")
         
-        edited_body = edited_body.replace("<li class=\'list-group-item list-ques\'>", 
-        "</ul></article>\n\r   <article class=\'question single-question question-type-normal\'><ul><li class=\'list-group-item list-ques\'>")
+        edited_body = edited_body.replace("<li class=\"list-group-item list-ques\">", 
+        "</ul></article>\n\r   <article class=\"question single-question question-type-normal\"><ul><li class=\"list-group-item list-ques\">")
         
+        f= open("out.html","w+")
+        f.write(edited_body)
+        f.close() 
+
+
+
         response = response.replace(body=edited_body)
         url = response.request.url
         
@@ -197,9 +203,7 @@ def clean_question(ques_temp, q_label):
     for i, s in enumerate(ques_temp):
         ques_temp[i] = s.strip()
 
-    q_label = q_label.strip()
-
-    if q_label != "" :
+    if q_label != "" and q_label != None :
         ques_temp[1] = "<div class='label-info'><i>" + q_label.strip() + "</i></div><br/><div class='question'>" + ques_temp[1] + '</div>'
     else:
         ques_temp[1] = "<div class='question'>" + ques_temp[1] + '</div>'

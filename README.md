@@ -11,6 +11,9 @@
 
 > python grab_studypress.py "PhraseIdioms"
 
+> python grab_studypress.py "Books Author(Bank-Eng)"
+
+
 ## Get Image 
 > python grab_image.py
 
