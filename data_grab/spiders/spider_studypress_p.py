@@ -41,13 +41,11 @@ class StudyPressPSpider(scrapy.Spider):
         
         edited_body = edited_body.replace("<li class=\"list-group-item list-ques\">", 
         "</ul></article>\n\r   <article class=\"question single-question question-type-normal\"><ul><li class=\"list-group-item list-ques\">")
-        
-        f= open("out.html","w+")
-        f.write(edited_body)
-        f.close() 
-
-
-
+       
+       # f= open("test.html","w+")
+        # f.write(edited_body)
+        # f.close() 
+      
         response = response.replace(body=edited_body)
         url = response.request.url
         

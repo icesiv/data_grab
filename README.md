@@ -21,7 +21,10 @@
 > http://studypress.org//member/dashboard
 
 ## Todo
-> Tor Try
+  
+        f= open("out.html","w+")
+        f.write(edited_body)
+        f.close() 
 
 ## Mac setting Environment
 sudo -H pip install virtualenv
