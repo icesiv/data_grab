@@ -202,7 +202,7 @@ class ExamvidaSpider(scrapy.Spider):
             return
 
         # follow pagination
-        has_next_page = response.css('.icon-angle-right').extract_first()
+        has_next_page = response.css('.fa-angle-right').extract_first()
         next_page = None
 
         if has_next_page is not None:
