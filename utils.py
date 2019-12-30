@@ -4,6 +4,7 @@ import ntpath
 import string
 import re
 
+import config
 ##
 # Random Generator
 # --------------------------
