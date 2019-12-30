@@ -4,10 +4,12 @@ import random
 
 from utils import id_generator
 
+from scrapy.shell import inspect_response
+
+
 class StudyPressMSpider(scrapy.Spider):
     name = "studypress_modeltest"
-    allowed_domains = ["icabd.com"]
-
+  
     main_id = 0
     topic_id = 0
     subject_id = 0
@@ -34,12 +36,17 @@ class StudyPressMSpider(scrapy.Spider):
     def parse(self, response):
         edited_body = str(response.body, 'UTF-8')
 
-        edited_body = edited_body.replace("<ul class=\'list-group\'>", "<article class='question single-question question-type-normal'><ul>")
+        edited_body = edited_body.replace("<ul class=\"list-group\">", "<article class='question single-question question-type-normal'><ul>")
         edited_body = edited_body.replace("</ul>", "</ul></article>")
-        edited_body = edited_body.replace("<li class=\'list-group-item\'", "</ul></article>\n\r  <article class='question single-question question-type-normal'><ul><li class=\'list-group-item\'")
+
+        edited_body = edited_body.replace("<li class=\"list-group-item\"", "</ul></article>\n\r  <article class='question single-question question-type-normal'><ul><li class=\'list-group-item\'")
 
 
         response = response.replace(body=edited_body)
+
+
+        # inspect_response(response, self)
+
         url = response.request.url
         
         count = 1
@@ -119,7 +126,10 @@ class StudyPressMSpider(scrapy.Spider):
                 'answers': ans_json,
                 
                 'total_correct_answers': len(corr_ans_index),
-                'correct_answers': corr_ans_index,
+                
+                # 'correct_answers': corr_ans_index,
+                'correct_answers': corr_ans_index[0],
+                
                 'marks': 5,
                 'time_to_spend': 60,
                 'difficulty_level': "easy",
