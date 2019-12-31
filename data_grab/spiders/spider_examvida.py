@@ -102,7 +102,7 @@ class ExamvidaSpider(scrapy.Spider):
 
                 for i, a in enumerate(ans):
                     ans_json += '{\"option_value\": \"'
-                    ans_json += a
+                    ans_json += a.replace('"','\\"')
                     ans_json += '\", \"optionl2_value\": \"\", \"has_file\": 0, \"file_name\": \"\"}'
 
                     if i < total_answers - 1:
