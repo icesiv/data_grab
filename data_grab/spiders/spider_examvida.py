@@ -87,7 +87,9 @@ class ExamvidaSpider(scrapy.Spider):
 
                 for index in corr_ans_index:
                     i = int(index) - 1
-                    corr_ans.append(ans[i])
+
+                    if(len(ans)>i):
+                        corr_ans.append(ans[i])
 
                 # shuffle ans
                 random.shuffle(ans)
@@ -194,6 +196,7 @@ class ExamvidaSpider(scrapy.Spider):
                     'correct_answers_value': corr_ans,
                     'image_list': image_list
                 }
+
                 print("Q#", ques_no + "\t" + meta)
 
                 yield item
